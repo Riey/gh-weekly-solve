@@ -10,10 +10,10 @@ use std::path::PathBuf;
 #[derive(StructOpt)]
 #[structopt(name = "gs")]
 enum Opt {
-    #[structopt(name = "gen")]
+    #[structopt(name = "gen", about = "Generate key and hash")]
     Gen,
 
-    #[structopt(name = "pick")]
+    #[structopt(name = "pick", about = "Pick key from file")]
     Pick {
         #[structopt(parse(from_os_str))]
         file: PathBuf,
