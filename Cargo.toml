@@ -1,0 +1,16 @@
+[package]
+name = "gh-weekly-solve"
+version = "0.1.0"
+authors = ["Riey <creeper844@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "gs"
+path = "src/main.rs"
+
+[dependencies]
+rust-crypto = "0.2.36"
+structopt = "0.3.4"
+clap = "2.33.0"
+rand = "0.7.2"
+byte-slice-cast = "0.3.4"
