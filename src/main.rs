@@ -11,7 +11,9 @@ use std::path::PathBuf;
 #[structopt(name = "gs")]
 enum Opt {
     #[structopt(name = "gen", about = "Generate key and hash")]
-    Gen,
+    Gen {
+        key_len: usize,
+    },
 
     #[structopt(name = "pick", about = "Pick key from file")]
     Pick {
@@ -24,8 +26,8 @@ fn main() {
     let opt = Opt::from_args();
 
     match opt {
-        Opt::Gen => {
-            let key: String = thread_rng().sample_iter(Alphanumeric).take(10).collect();
+        Opt::Gen { key_len } => {
+            let key: String = thread_rng().sample_iter(Alphanumeric).take(key_len).collect();
             println!("----key----\n{}", key);
 
             let mut hash = Sha512::new();
