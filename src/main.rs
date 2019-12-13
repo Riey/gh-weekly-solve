@@ -11,12 +11,12 @@ use std::path::PathBuf;
 #[structopt(name = "gs")]
 enum Opt {
     #[structopt(name = "gen", about = "Generate key and hash")]
-    Gen {
-        key_len: usize,
-    },
+    Gen { key_len: usize },
 
     #[structopt(name = "pick", about = "Pick key from file")]
     Pick {
+        #[structopt(short)]
+        verbose: bool,
         #[structopt(parse(from_os_str))]
         file: PathBuf,
     },
@@ -27,7 +27,10 @@ fn main() {
 
     match opt {
         Opt::Gen { key_len } => {
-            let key: String = thread_rng().sample_iter(Alphanumeric).take(key_len).collect();
+            let key: String = thread_rng()
+                .sample_iter(Alphanumeric)
+                .take(key_len)
+                .collect();
             println!("----key----\n{}", key);
 
             let mut hash = Sha512::new();
@@ -36,7 +39,7 @@ fn main() {
 
             println!("----hash----\n{}", hash);
         }
-        Opt::Pick { file } => {
+        Opt::Pick { verbose, file } => {
             let file = BufReader::with_capacity(1024 * 16, std::fs::File::open(file).unwrap());
             let mut keys: Vec<String> = file.lines().collect::<Result<_, _>>().unwrap();
             keys.sort();
@@ -44,6 +47,12 @@ fn main() {
             let mut hash = Sha512::new();
 
             for key in keys.iter() {
+                if verbose {
+                    let mut temp = Sha512::new();
+                    temp.input_str(key);
+                    println!("# hash for [{}]", key);
+                    println!("{}", temp.result_str());
+                }
                 hash.input_str(key);
             }
 
